@@ -7,18 +7,39 @@ let links = [{
     description: 'full stack tutorial for graphql'
 }]
 
+let idCount = links.length;
+
 // 2
 const resolvers = {
     Query: {
         info: () => `this is the API `,
         // 2
-        feed: () => links
+        feed: () => links,
+        link: (parent, args) => {
+            console.log(args);
+            return links.find(item => item.id === args.id)
+        }
     },
-    // 3
-    Link: {
-        id: (parent) => parent.id,
-        description: (parent) => parent.description,
-        url: (parent) => parent.url,
+    Mutation: {
+        post: (parent, args) => {
+            const link = {
+                id: `link-${idCount++}`,
+                description: args.description,
+                url: args.url,
+            }
+            links.push(link);
+            return link
+        },
+        updateLink: (parent, args) => {
+            console.log(args);
+            // const link = {
+            //     id: args.id,
+            //     description: args.description,
+            //     url: args.url
+            // }
+            // let links = [ ...links, link ];
+            // return link;
+        }
     }
 }
 
